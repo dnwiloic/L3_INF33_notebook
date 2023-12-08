@@ -1,0 +1,28 @@
+body {
+    background-color: rgb(217, 217, 217);
+}
+
+form {
+    background-color: white;
+    padding: 50px;
+    max-width: 80%;
+    margin-top: 50px;
+    margin-inline: auto;
+}
+
+h2 {
+    text-align: center;
+}
+
+.notice {
+    font-size: small;
+}
+
+@media (min-width: 1024px) {
+    form {
+        padding: 50px;
+        max-width: 30%;
+        margin-top: 100px;
+        margin-inline: auto;
+    }
+}

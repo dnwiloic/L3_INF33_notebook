@@ -1,0 +1,206 @@
+<script setup lang="ts">
+  import { onMounted } from 'vue';
+  import { useUserStore } from '@/stores/user';
+  import Acceuil from "./home/AcceuilHome.vue"
+  const user = useUserStore();
+  
+  function toggleActive(domElt: HTMLElement|null){
+    if(!domElt) return
+    if(domElt.classList.contains('active')){
+      domElt.classList.remove('active')
+    }
+    else{
+      domElt.classList.add('active')
+    }
+  }
+  onMounted(()=>{
+    
+    document.querySelectorAll(".btn-close").forEach(elt=>{
+      elt.addEventListener('click', function(event){
+        toggleActive(document.getElementById(elt.getAttribute('to-close')))
+      })
+    })
+    document.querySelectorAll(".open-btn").forEach(elt=>{
+      
+      elt.addEventListener('click', function(event){
+        toggleActive(document.getElementById(elt.getAttribute('to-open')))
+      })
+    })
+
+    const sideItems = document.querySelectorAll('.sidebar ul li')
+    sideItems.forEach( elt => {
+      elt.addEventListener('click',function(event){
+        console.log('click')
+        document.querySelector(".sidebar ul li.active")?.classList.remove("active")
+        elt?.classList.add("active")
+      })
+    })
+  })
+</script>
+
+<template>
+  <main>
+    <div class="main-container d-flex">
+      <div class="sidebar" id="side_nav">
+        <div class="header-box px-3 pt-3 pb-4 d-flex justify-content-between">
+          <h1 class="fs-4">
+            <span class="bg-white text-dark rounder shadow px-2 mx-2">Nt</span>
+            <span class="text-white">Note</span>
+          </h1>
+          <button class="btn d-md-none d-block btn-close px-1 py-0 text-white" to-close="side_nav">
+            <font-awesome-icon icon="fa-solid fa-xmark" />
+          </button>
+        </div>
+
+        <ul class="list-unstyled px-2">
+          <li class="active" >
+            
+            <a href="#" class="text-decoration-none px-2 py-2 d-block">
+              <font-awesome-icon icon="fa-solid fa-house" /> 
+              Accueil
+            </a>
+          </li>
+          <li class="">
+            
+            <a href="#" class="text-decoration-none px-2 py-2 d-block">
+               <font-awesome-icon icon="fa-solid fa-clipboard" />
+               Notes
+            </a>
+          </li>
+          <li class="">
+            
+            <a href="#" class="text-decoration-none px-2 py-2 d-block"> 
+              <font-awesome-icon icon="fa-solid fa-star" />
+              Favories
+            </a>
+          </li>
+          <li class="">
+            
+            <a href="#" class="text-decoration-none px-2 py-2 d-block d-flex justify-content-between">
+              
+              <span> <font-awesome-icon icon="fa-solid fa-layer-group" /> Categorie</span>
+              <span class="bg-dark rounded-pill text-white py-0 px-2"> 02 </span>
+               
+            </a>
+          </li>
+          <li class="">
+            
+            <a href="#" class="text-decoration-none px-2 py-2 d-block"> 
+              <font-awesome-icon icon="fa-solid fa-dna" />
+              Evaluation
+            </a>
+          </li>
+        </ul>
+        <hr class="h-color mx-3">
+        <div class=" dropdown text-white">
+            <a class="text-decoration-none px-2 py-2 d-block" data-bs-toggle="collapse" href="#user_menu_profile" role="button" aria-expanded="false" aria-controls="collapseExample">
+              <span><font-awesome-icon icon="fa-solid fa-user-large" /></span>
+              <span>{{ user.user.name }}</span>
+            </a>
+            <div class="collapse list-unstyled px-4 bg-dark" id="user_menu_profile" >
+              <li><a class="text-decoration-none px-2 py-2 d-block" href="#">Action</a></li>
+              <li><a class="text-decoration-none px-2 py-2 d-block" href="#">Another action</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="text-decoration-none px-2 py-2 d-block" href="#">Se deconnecter</a></li>
+            </div>
+          </div>
+      </div>
+
+      <div class="content">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+          <div class="d-flex container-fluid justify-content-between">
+            <button class="navbar-toggler open-btn" type="button" to-open="side_nav" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="d-none d-lg-block ">
+              <p>Bienvenu {{ user.user.name }}</p>
+            </div>
+              <div class=" d-sm-none " >
+                <button class="btn open-btn" to-open="global_search">
+                  <font-awesome-icon icon="fa-solid fa-magnifying-glass" />
+                </button>
+                
+              </div>
+              <div id="global_search" >
+                <div class="d-flex" role="search">
+                  <div class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                  </div>
+                </div>
+              </div>
+          
+          </div>
+          
+        </nav>
+
+        <div class="container">
+          <Acceuil />
+        </div>
+      </div>
+    </div>
+  </main>
+  
+</template>
+
+<style scoped>
+
+
+#side_nav {
+  background: black;
+  min-width: 12em;
+  padding: 1em;
+  transition: all 0.5s;
+}
+
+.content{
+  min-height: 100vh;
+  width: 100%;;
+}
+
+hr.h-color{
+  color: white;
+}
+
+.sidebar li.active{
+  background: white;
+  border-radius: 0.5em;
+}
+
+.sidebar li.active a, .sidebar li.active a:hover{
+  color: black;
+}
+
+.sidebar li a{
+  color: white;
+}
+
+.profile_drop{
+  margin-inline: 3em;
+}
+
+@media (max-width: 576px) {
+  #global_search{
+  display: none;
+  transition: all 0.5s;
+}
+
+#global_search.active{
+  display: block;}
+}
+
+
+@media (max-width: 992px){
+  #side_nav{
+    margin-left: -16em;
+    position: fixed;
+    min-height: 100vh;
+    z-index: 1;
+  }
+
+  #side_nav.active{
+     margin-left: 0;
+  }
+}
+
+</style>
