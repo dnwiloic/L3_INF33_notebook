@@ -2,6 +2,8 @@
   import { onMounted } from 'vue';
   import { useUserStore } from '@/stores/user';
   import Acceuil from "./home/AcceuilHome.vue"
+  import AllNote from "./home/AllNote.vue"
+  import EvalationConfig from './home/EvalationConfig.vue';
   const user = useUserStore();
   
   function toggleActive(domElt: HTMLElement|null){
@@ -55,53 +57,53 @@
         <ul class="list-unstyled px-2">
           <li class="active" >
             
-            <a href="#" class="text-decoration-none px-2 py-2 d-block">
+            <RouterLink :to="{name:'accueil'}" class="text-decoration-none px-2 py-2 d-block nav-lk">
               <font-awesome-icon icon="fa-solid fa-house" /> 
               Accueil
-            </a>
+            </RouterLink>
           </li>
           <li class="">
             
-            <a href="#" class="text-decoration-none px-2 py-2 d-block">
+            <RouterLink :to="{name:'all_notes'}" class="nav-lk text-decoration-none px-2 py-2 d-block">
                <font-awesome-icon icon="fa-solid fa-clipboard" />
                Notes
-            </a>
+            </RouterLink>
           </li>
           <li class="">
             
-            <a href="#" class="text-decoration-none px-2 py-2 d-block"> 
+            <RouterLink :to="{name:''}" class="text-decoration-none px-2 py-2 d-block nav-lk"> 
               <font-awesome-icon icon="fa-solid fa-star" />
               Favories
-            </a>
+            </RouterLink>
           </li>
           <li class="">
             
-            <a href="#" class="text-decoration-none px-2 py-2 d-block d-flex justify-content-between">
+            <RouterLink to="" class="text-decoration-none nav-lk px-2 py-2 d-block d-flex justify-content-between">
               
               <span> <font-awesome-icon icon="fa-solid fa-layer-group" /> Categorie</span>
               <span class="bg-dark rounded-pill text-white py-0 px-2"> 02 </span>
                
-            </a>
+            </RouterLink>
           </li>
           <li class="">
             
-            <a href="#" class="text-decoration-none px-2 py-2 d-block"> 
+            <RouterLink :to="{name:'eval_config'}" class="text-decoration-none nav-lk px-2 py-2 d-block"> 
               <font-awesome-icon icon="fa-solid fa-dna" />
               Evaluation
-            </a>
+            </RouterLink>
           </li>
         </ul>
         <hr class="h-color mx-3">
         <div class=" dropdown text-white">
-            <a class="text-decoration-none px-2 py-2 d-block" data-bs-toggle="collapse" href="#user_menu_profile" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <a  class="text-decoration-none nav-lk px-2 py-2 d-block " data-bs-toggle="collapse" href="#user_menu_profile" role="button" aria-expanded="false" aria-controls="collapseExample">
               <span><font-awesome-icon icon="fa-solid fa-user-large" /></span>
               <span>{{ user.user.name }}</span>
             </a>
             <div class="collapse list-unstyled px-4 bg-dark" id="user_menu_profile" >
-              <li><a class="text-decoration-none px-2 py-2 d-block" href="#">Action</a></li>
-              <li><a class="text-decoration-none px-2 py-2 d-block" href="#">Another action</a></li>
+              <li><RouterLink :to="{name:''}" class="text-decoration-none nav-lk px-2 py-2 d-block" href="#">Action</RouterLink></li>
+              <li><RouterLink :to="{name:''}" class="text-decoration-none nav-lk px-2 py-2 d-block" href="#">Another action</RouterLink></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="text-decoration-none px-2 py-2 d-block" href="#">Se deconnecter</a></li>
+              <li><RouterLink :to="{name:''}" class="text-decoration-none nav-lk px-2 py-2 d-block" href="#">Se deconnecter</RouterLink></li>
             </div>
           </div>
       </div>
@@ -134,8 +136,8 @@
           
         </nav>
 
-        <div class="container">
-          <Acceuil />
+        <div>
+          <RouterView/>
         </div>
       </div>
     </div>
@@ -148,7 +150,7 @@
 
 #side_nav {
   background: black;
-  min-width: 12em;
+  min-width: 15em;
   padding: 1em;
   transition: all 0.5s;
 }
@@ -167,12 +169,12 @@ hr.h-color{
   border-radius: 0.5em;
 }
 
-.sidebar li.active a, .sidebar li.active a:hover{
-  color: black;
+.sidebar li.active .nav-lk, .sidebar li.active .nav-lk:hover{
+   color: black !important;
 }
 
-.sidebar li a{
-  color: white;
+.sidebar li .nav-lk{
+  color: white !important;
 }
 
 .profile_drop{

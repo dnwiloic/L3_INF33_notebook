@@ -1,18 +1,26 @@
 <script setup lang="ts">
+  import  {ref} from 'vue'
   import NoteCard from '../../components/note/NoteCard.vue'
   import NoteForm from "../../components/forms/NoteForm.vue"
-  import {generateRandomNotesArray} from "../../API/notes.ts"
+  import DeleteNote from "../../components/forms/DeleteNote.vue"
+  import {generateRandomNotesArray} from "../../API/notes"
+  import {useUiStore} from '../../stores/ui'
+ 
+  const uis = useUiStore()
+  const notes = generateRandomNotesArray(12);
 
-  const notes = generateRandomNotesArray();
+  const currentNote = ref(null)
+  
 </script>
 <template>
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="noteForm" aria-hidden="true">
-        <NoteForm />
-    </div>
-    <div class="grid-container">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#noteForm">Ajouter</button>
-        <div v-for="note in notes" v-bind:key="note.id">
-            <NoteCard />
+    <div class="container">
+        <NoteForm :note="currentNote" />
+        <DeleteNote :note="currentNote"/>
+        <div class="grid-container">
+            <button class="btn btn-primary" data-bs-toggle="modal" @mouseover="currentNote=null" :data-bs-target="'#'+uis.noteFormId">Ajouter</button>
+            <div  v-for="note in notes" v-bind:key="note.id" @mouseover="currentNote=note">
+                <NoteCard :note="note" />
+            </div>
         </div>
     </div>
 </template>

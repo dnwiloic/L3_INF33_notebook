@@ -1,8 +1,8 @@
 // Fonction pour générer un tableau d'objets de notes aléatoires
-export function generateRandomNotesArray() {
+export function generateRandomNotesArray(limit: number) {
     const notes = [];
   
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < limit; i++) {
       const note = {
         title: `Note ${i + 1}`,
         content: `Contenu de la note ${i + 1}`,

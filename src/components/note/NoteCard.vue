@@ -1,46 +1,41 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+  import { useUiStore } from '@/stores/ui';
+  import { defineProps } from 'vue';
 
-function toggleActive(domElt: HTMLElement|null){
-    if(!domElt) return
-    if(domElt.classList.contains('d-none')){
-      domElt.classList.remove('d-none')
-    }
-    else{
-      domElt.classList.add('d-none')
-      
-    }
-  }
-
-  
-  
+  const props = defineProps(['note'])
+  const {note} = props
+  const uis = useUiStore()
 </script>
 <template>
-    <div class="card" id="note_card">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on.</p>
+    <div v-if="note" class="card" id="note_card">
+        <h5 class="card-title">{{ note.title }}</h5>
+        <p class="card-text">{{ note.content }}</p>
         <div id="note_card_action">
           <div class="d-flex justify-content-between " >
-              <font-awesome-icon icon="fa-solid fa-star" />
-              <font-awesome-icon icon="fa-solid fa-pen-to-square" />
-              <font-awesome-icon icon="fa-solid fa-trash" />
+              <button class="btn"><font-awesome-icon icon="fa-solid fa-star" /></button>
+              <button class="btn" data-bs-toggle="modal" :data-bs-target="'#'+uis.noteFormId">
+                <font-awesome-icon icon="fa-solid fa-pen-to-square" /></button>
+              <button class="btn" data-bs-toggle="modal" :data-bs-target="'#'+uis.deleteNoteConfimationForm">
+                <font-awesome-icon icon="fa-solid fa-trash" />
+              </button>
           </div>
         </div>
     </div>
 </template>
 <style scoped>
 #note_card_action{
-  display: none;
-  transition: all 1s;
+  display: block;
+  visibility: hidden;
+  margin-top: auto;
 }
 .card{
     height: 9em;
     padding: 1.2em;
-    border-radius: 1.1em
+    border-radius: 1.1em;
 }
 
 .card:hover #note_card_action{
-  display: block;
+  visibility: visible;
 }
 
 
