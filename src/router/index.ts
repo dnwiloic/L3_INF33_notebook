@@ -5,6 +5,8 @@ import RegisterView from '@/views/RegisterView.vue'
 import AcceuilHomeVue from '@/views/home/AcceuilHome.vue'
 import EvalationConfigVue from '@/views/home/EvalationConfig.vue'
 import AllNoteVue from '@/views/home/AllNote.vue'
+import PassEvaluationVue from '@/views/evaluation/PassEvaluation.vue'
+import CorrectEvaluationVue from '@/views/evaluation/CorrectEvaluation.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,6 +42,16 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: RegisterView
+    },
+    {
+      path: '/evaluation/correction',
+      name: 'evalution_correction',
+      component: CorrectEvaluationVue
+    },
+    {
+      path: '/evaluation/:nbrNotes',
+      name: 'evaluation',
+      component: PassEvaluationVue,
     },
     {
       path: '/about',

@@ -1,13 +1,19 @@
 <script setup lang="ts">
-    import  {ref, computed} from 'vue'
-    import {useUiStore} from '../../stores/ui'
+import  {ref, computed} from 'vue'
+import {useUiStore} from '../../stores/ui'
+import NoteFilter from '../forms/NoteFilterForm.vue';
+import NoteForm from '../forms/NoteForm.vue';
+import { useFilterStore } from '@/stores/filter';
+import type Note from '@/interfaces/note';
+
+    const filterStore = useFilterStore()
     const props = defineProps(['notes'])
-    const notes = props.notes as Array<any>
+    const notes = ref(props.notes as Array<Note>)
     const uis = useUiStore();
     const currentPage = ref(1)
 
     const nbrPages = computed(()=>{
-        return Math.ceil( props.notes?.length/uis.nbrElementsByTables)
+        return Math.ceil( notes.value.length/uis.nbrElementsByTables)
     })
 
     const showerTable = computed(()=>{
@@ -15,11 +21,14 @@
         const start = (currentPage.value - 1) * uis.nbrElementsByTables
         const end = currentPage.value * uis.nbrElementsByTables - 1
         
-        const note2 = notes.filter( (value, index)=>(index>=start && index<=end))
+        const note2 = notes.value.filter( (value, index)=>(index>=start && index<=end))
         return note2
     })
 
     const showerIndexPage = computed(()=>{
+        if(nbrPages.value === 0){
+            return [0]
+        }
         if(currentPage.value===1)
             return [currentPage.value,currentPage.value+1,currentPage.value+2];
         else if(currentPage.value === nbrPages.value)
@@ -28,9 +37,19 @@
             return [currentPage.value-1,currentPage.value,currentPage.value+1]
     })
 
+    function launch_filter(){
+        notes.value = filterStore.NotesFilter(notes.value)
+    }
 </script>
 <template>
-    <div class="m-3">
+    
+    <div class="m-5">
+        <div class="d-flex justify-content-between">
+            <NoteFilter  @launch-filter="launch_filter"/>
+            <button class="btn btn-primary" data-bs-toggle="modal" @mouseover="currentNote=null" :data-bs-target="'#'+uis.noteFormId">Ajouter</button>
+            <NoteForm :note="{}" />
+        </div>
+        
         <table>
             <thead>
                 <tr>
@@ -39,7 +58,14 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody v-if="notes.length===0">
+                <tr>
+                    <td :colspan=3 :rowspan=3 class="text-center">
+                        la liste est vide
+                    </td>
+                </tr>
+            </tbody>
+            <tbody v-else>
                 <tr v-for="note in showerTable" :key="note.id">
                     <td><input type="checkbox"></td>
                     <td><span>{{ note.title }}</span></td>

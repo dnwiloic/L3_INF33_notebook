@@ -1,11 +1,12 @@
 <script setup lang="ts">
-  import { onMounted } from 'vue';
+  import { computed, onMounted,ref } from 'vue';
   import { useUserStore } from '@/stores/user';
   import Acceuil from "./home/AcceuilHome.vue"
   import AllNote from "./home/AllNote.vue"
   import EvalationConfig from './home/EvalationConfig.vue';
   const user = useUserStore();
-  
+  const side_nav = ref()
+  const showFontBlack=ref(false)
   function toggleActive(domElt: HTMLElement|null){
     if(!domElt) return
     if(domElt.classList.contains('active')){
@@ -14,10 +15,15 @@
     else{
       domElt.classList.add('active')
     }
+
+    showFontBlack.value = side_nav.value && side_nav.value.classList.contains('active')
   }
+
+
   onMounted(()=>{
-    
+    side_nav.value = document.getElementById("side_nav")
     document.querySelectorAll(".btn-close").forEach(elt=>{
+      console.log(elt.tagName)
       elt.addEventListener('click', function(event){
         toggleActive(document.getElementById(elt.getAttribute('to-close')))
       })
@@ -42,14 +48,17 @@
 
 <template>
   <main>
+    <div :class="!showFontBlack?'d-none':'d-block'" class="btn-close" to-close="side_nav" id="side_nav_font">
+
+    </div>
     <div class="main-container d-flex">
       <div class="sidebar" id="side_nav">
         <div class="header-box px-3 pt-3 pb-4 d-flex justify-content-between">
           <h1 class="fs-4">
             <span class="bg-white text-dark rounder shadow px-2 mx-2">Nt</span>
-            <span class="text-white">Note</span>
+            <span class="">Note</span>
           </h1>
-          <button class="btn d-md-none d-block btn-close px-1 py-0 text-white" to-close="side_nav">
+          <button class="btn d-lg-none d-block btn-close px-1 py-0 text-white" to-close="side_nav">
             <font-awesome-icon icon="fa-solid fa-xmark" />
           </button>
         </div>
@@ -149,10 +158,21 @@
 
 
 #side_nav {
-  background: black;
+  background: white;
   min-width: 15em;
   padding: 1em;
   transition: all 0.5s;
+}
+
+#side_nav_font{
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  background-color: rgba(20, 20, 20, 0.3);
+  height: 100vh;
+  width: 100vw;
+  z-index: 2;
 }
 
 .content{
@@ -161,20 +181,20 @@
 }
 
 hr.h-color{
-  color: white;
+  color: black;
 }
 
 .sidebar li.active{
-  background: white;
+  background: black;
   border-radius: 0.5em;
 }
 
 .sidebar li.active .nav-lk, .sidebar li.active .nav-lk:hover{
-   color: black !important;
+   color: white !important;
 }
 
 .sidebar li .nav-lk{
-  color: white !important;
+  color: black !important;
 }
 
 .profile_drop{
@@ -188,7 +208,8 @@ hr.h-color{
 }
 
 #global_search.active{
-  display: block;}
+  display: block;
+}
 }
 
 
@@ -197,7 +218,7 @@ hr.h-color{
     margin-left: -16em;
     position: fixed;
     min-height: 100vh;
-    z-index: 1;
+    z-index: 3;
   }
 
   #side_nav.active{

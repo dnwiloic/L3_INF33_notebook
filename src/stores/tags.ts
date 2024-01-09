@@ -22,7 +22,6 @@ export const useTagsStore = defineStore('tags', () => {
     { id: 17, libelle: 'motifN' },
     { id: 18, libelle: 'motifO' },
     { id: 19, libelle: 'motifP' },
-    { id: 20, libelle: 'motifQ' },
   ]
 
   return { userTags }

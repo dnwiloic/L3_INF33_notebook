@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import SelectTags from '@/components/forms/SelectTags.vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+
 
 const questionNumber = ref(10)
 </script>
@@ -15,9 +16,9 @@ const questionNumber = ref(10)
                 <SelectTags />
             </div>
             <div class="d-flex justify-content-end">
-                <button class="btn btn-primary ms-auto">
+                <RouterLink :to="{name:'evaluation', params:{nbrNotes: questionNumber}}" class="btn btn-primary ms-auto">
                     Demarrer
-                </button>
+                </RouterLink>
             </div>
         </div>
     </div>

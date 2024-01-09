@@ -3,7 +3,7 @@
   import NoteCard from '../../components/note/NoteCard.vue'
   import NoteForm from "../../components/forms/NoteForm.vue"
   import DeleteNote from "../../components/forms/DeleteNote.vue"
-  import {generateRandomNotesArray} from "../../API/notes"
+  import {generateRandomNotesArray} from "../../API/note_model"
   import {useUiStore} from '../../stores/ui'
  
   const uis = useUiStore()
