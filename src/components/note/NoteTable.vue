@@ -6,8 +6,10 @@ import NoteForm from '../forms/NoteForm.vue';
 import { useFilterStore } from '@/stores/filter';
 import type Note from '@/interfaces/note';
 
+
     const filterStore = useFilterStore()
     const props = defineProps(['notes'])
+    const original_notes = props.notes as Array<Note>
     const notes = ref(props.notes as Array<Note>)
     const uis = useUiStore();
     const currentPage = ref(1)
@@ -38,7 +40,7 @@ import type Note from '@/interfaces/note';
     })
 
     function launch_filter(){
-        notes.value = filterStore.NotesFilter(notes.value)
+        notes.value = filterStore.NotesFilter(original_notes)
     }
 </script>
 <template>

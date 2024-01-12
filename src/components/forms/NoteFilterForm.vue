@@ -3,17 +3,20 @@ import {ref} from 'vue'
 import {useFilterStore} from "@/stores/filter"
 import SelectTags from "../forms/SelectTags.vue";
 import type FilterOption from "@/interfaces/filter";
-import { note_statut } from '@/interfaces/note_status_enum';
+import { type note_statut } from '@/interfaces/note_status_enum';
+import {useTagsStore} from "../../stores/tags"
 
+
+const tagStore = useTagsStore();
 const emit = defineEmits(['launch-filter'])
 const filterStore = useFilterStore()
 const tes =ref([])
 const filterParams = ref(filterStore.NoteFilterParam)
-filterParams.value.statut = []
-filterParams.value.created_date = {
-    debut:'',
-    fin:''
-}
+filterParams.value.statut = ['aquied', 'in_aquisition', 'not_aquied'] as Array<note_statut>
+filterParams.value.favorite = true
+filterParams.value.not_favorite = true
+filterParams.value.created_date = {}
+filterParams.value.tags = []
 
 const filtrer = ()=>{
     
@@ -35,7 +38,11 @@ const filtrer = ()=>{
                 <div>
                     <div class="mb-3">
                         <input class="form-check-input" type="checkbox"  id="favorite" v-model="filterParams.favorite">
-                        <label for="favorite" class="col-form-label">Favorie </label>
+                        <label for="favorite" class="col-form-label">Inclure les Favories </label>
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-check-input" type="checkbox"  id="not_favorite" v-model="filterParams.not_favorite">
+                        <label for="not_favorite" class="col-form-label">Inclure les non Favories </label>
                     </div>
                     <div class="mb-3">
                         <label for="note-title" class="col-form-label">Titre:</label>
@@ -57,15 +64,15 @@ const filtrer = ()=>{
                         <div class="col-form-label">Statut</div>
                         <div class="d-flex justify-content-between">
                             <div class="radio_eval">
-                                <input id="non_aquis_radio" type="checkbox" :value="note_statut.not_aquied" v-model="filterParams.statut" class="form-check-input" >
+                                <input id="non_aquis_radio" type="checkbox" :value="'not_aquied'" v-model="filterParams.statut" class="form-check-input" >
                                 <label for="non_aquis_radio" class="form-label">Non acquis</label>
                             </div >
                             <div class="radio_eval">
-                                <input id="en_cours_radio"  type="checkbox" :value="note_statut.in_aquisition" v-model="filterParams.statut" class="form-check-input" >
+                                <input id="en_cours_radio"  type="checkbox" :value="'in_aquisition'" v-model="filterParams.statut" class="form-check-input" >
                                 <label for="en_cours_radio" class="form-label">En Cours d'Acquis</label>
                             </div>
                             <div class="radio_eval">
-                                <input id="aquis_radio" type="checkbox" :value="note_statut.aquied" v-model="filterParams.statut" class="form-check-input" >
+                                <input id="aquis_radio" type="checkbox" :value="'aquied'" v-model="filterParams.statut" class="form-check-input" >
                                 <label for="aquis_radio" class="form-label"> Acquis</label>
                             </div>
                         </div>
@@ -84,7 +91,7 @@ const filtrer = ()=>{
                         </div>
                     </div>
                     <div class="mb-3">
-                        <SelectTags />
+                        <SelectTags v-model:tags_selected="filterParams.tags" v-model:tags_list="tagStore.userTags" />
                     </div>
                 </div>
             </div>

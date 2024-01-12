@@ -1,20 +1,43 @@
 <script setup lang="ts">
-import { ref , computed, onMounted} from 'vue';
+import { ref , computed, onMounted, watch, type Ref} from 'vue';
 import {useTagsStore} from "../../stores/tags"
+import { useUserStore } from '@/stores/user';
+import type Tag from '@/interfaces/tag';
 
 const taggMotif = ref('')
 const tagStore = useTagsStore();
-const tags = ref( tagStore.userTags.map(elt=>{
+const userStore = useUserStore();
+
+const tags_selected =  defineModel('tags_selected') as Ref<Array<Tag>>
+const tags_list = defineModel('tags_list') as Ref<Array<Tag>>
+
+const tags = ref( tags_list.value.map(elt=>{
     return {
         ...elt,
-        selected : false
+        selected : tags_selected.value.includes(elt)
     }
 }))
+
+watch(tags.value,()=>{
+    const selected_tags = [] as Array<Tag>
+    tags.value.forEach(elt => {
+        if(elt.selected)  selected_tags.push({id:elt.id, content: elt.content})
+    })
+    tags_selected.value = selected_tags
+})
+
+
+const quick_create_tag = () => {
+    const tag = {
+        content: taggMotif.value
+    } as Tag
+    tagStore.createTag(userStore.user.id, tag)
+}
 const showAll = ref(false)
 
 const tagsResult = computed(()=>{
     console.log(taggMotif.value)
-    return tags.value.filter( elt =>(elt.libelle.includes(taggMotif.value)))
+    return tags.value.filter( elt =>(elt.content.includes(taggMotif.value)))
 })
 
 const selectedTags = computed(()=>{
@@ -51,15 +74,15 @@ onMounted(()=>{
 </script>
 <template>
     <label for="note-title" class="col-form-label">Tags:</label>
-    <span v-for="tag, index in selectedTags" :key="index" class="p-1">{{ tag.libelle }}</span>
+    <span v-for="tag, index in selectedTags" :key="index" class="tag-flag">{{ tag.content }}</span>
     <div id="select-tags">
         <input type="text" class="form-control" id="tag-input" v-model="taggMotif">
         <div id="tags-result">    
             <div class="tagItems" v-for="tag, index in tagsResult" :key="index">
                 <input type="checkbox" class="form-check-input" :id="''+tag.id" v-model="tag.selected">
-                <label :for="''+tag.id" class="form-label">{{ tag.libelle }}</label>
+                <label :for="''+tag.id" class="form-label">{{ tag.content }}</label>
             </div>
-            <button v-if="tagsResult.length===0" class="btn border-primary">
+            <button v-if="tagsResult.length===0" @click="quick_create_tag" class="btn border-primary">
                 Cree <span class="fw-bold">{{ taggMotif }}</span>
             </button>
         </div>
@@ -90,6 +113,14 @@ onMounted(()=>{
     max-height: 10em;
     transition: all 1s;
     padding: 1em;
+}
+
+.tag-flag{
+    display: inline-block;
+    background-color: rgba(226, 223, 223, 0.675);
+    font-size: 0.9rem;
+    padding: 0.2rem 0.5rem;
+    margin:0 0.5rem ;
 }
 
 input[type="checkbox"]{

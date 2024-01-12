@@ -1,8 +1,15 @@
 <script setup lang="ts">
     import { useUiStore } from '@/stores/ui';
     import SelectTags from './SelectTags.vue';
+import { useTagsStore } from '@/stores/tags';
+import type Tag from '@/interfaces/tag';
+
+
     const props = defineProps(['note'])
     const ui = useUiStore()
+    const tagStore = useTagsStore()
+    const selected_tags = [] as Array<Tag>
+
 </script>
 <template>
 <div class="modal fade" :id="ui.noteFormId" tabindex="-1" :aria-labelledby="ui.noteFormId" aria-hidden="true">
@@ -27,7 +34,7 @@
                         <textarea class="form-control" id="question-text" :value="props.note?.question"></textarea>
                     </div>
                     <div class="mb-3">
-                        <SelectTags />
+                        <SelectTags v-model:tags_selected="selected_tags" v-model:tags_list="tagStore.userTags" />
                     </div>
                 </div>
             </div>
