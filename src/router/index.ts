@@ -7,6 +7,7 @@ import EvalationConfigVue from '@/views/home/EvalationConfig.vue'
 import AllNoteVue from '@/views/home/AllNote.vue'
 import PassEvaluationVue from '@/views/evaluation/PassEvaluation.vue'
 import CorrectEvaluationVue from '@/views/evaluation/CorrectEvaluation.vue'
+import UserTagVue from '@/views/home/UserTag.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +32,11 @@ const router = createRouter({
           component: AllNoteVue,
           name:'all_notes'
         },
+        {
+          path:'categories',
+          component: UserTagVue,
+          name:'categories'
+        }
       ]
     },
     {

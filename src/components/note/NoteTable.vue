@@ -5,6 +5,7 @@ import NoteFilter from '../forms/NoteFilterForm.vue';
 import NoteForm from '../forms/NoteForm.vue';
 import { useFilterStore } from '@/stores/filter';
 import type Note from '@/interfaces/note';
+import SelectPage from './SelectPage.vue';
 
 
     const filterStore = useFilterStore()
@@ -27,20 +28,11 @@ import type Note from '@/interfaces/note';
         return note2
     })
 
-    const showerIndexPage = computed(()=>{
-        if(nbrPages.value === 0){
-            return [0]
-        }
-        if(currentPage.value===1)
-            return [currentPage.value,currentPage.value+1,currentPage.value+2];
-        else if(currentPage.value === nbrPages.value)
-            return [currentPage.value-2,currentPage.value-1 ,currentPage];
-        else
-            return [currentPage.value-1,currentPage.value,currentPage.value+1]
-    })
+    
 
     function launch_filter(){
         notes.value = filterStore.NotesFilter(original_notes)
+        currentPage.value = 1
     }
 </script>
 <template>
@@ -48,7 +40,7 @@ import type Note from '@/interfaces/note';
     <div class="m-5">
         <div class="d-flex justify-content-between">
             <NoteFilter  @launch-filter="launch_filter"/>
-            <button class="btn btn-primary" data-bs-toggle="modal" @mouseover="currentNote=null" :data-bs-target="'#'+uis.noteFormId">Ajouter</button>
+            <button class="btn btn-primary" data-bs-toggle="modal"  :data-bs-target="'#'+uis.noteFormId">Ajouter</button>
             <NoteForm :note="{}" />
         </div>
         
@@ -77,16 +69,12 @@ import type Note from '@/interfaces/note';
         </table>
         <div class="m-3" >
             <div class="d-flex justify-content-end align-item-center">
-                <button class="btn changePage" @click="currentPage--" :disabled="currentPage===1">Prev</button>
-                <button class="btn changePage" v-for="i in showerIndexPage" @click="currentPage=i" :class="currentPage===i?'current':''" :key="''+i">
-                    {{ i }} 
-                </button>
-                <button class="btn changePage" @click="currentPage++" :disabled="currentPage===nbrPages">Next</button>
+                <SelectPage v-if="nbrPages>=1" v-model:currentPage="currentPage" v-model:nbrPages="nbrPages" />
             </div>
         </div>
     </div>
 </template>
-<style>
+<style scoped>
 table{
     width: 100%;
     border-collapse: collapse;
@@ -105,14 +93,5 @@ tr:hover{
     background-color: rgb(191, 189, 189);
 }
 
-.changePage{
-    border: 1px solid rgb(52, 87, 193);
-    padding: 0.7em;
-    background-color: aliceblue;
-}
 
-.changePage.current{
-    background-color: blue;
-    color: white;
-}
 </style>

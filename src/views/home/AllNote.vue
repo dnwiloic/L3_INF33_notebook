@@ -7,7 +7,7 @@ import  {ref} from 'vue'
   import {generateRandomNotesArray} from "../../API/note_model"
   import {useUiStore} from '../../stores/ui'
   const uis = useUiStore()
-  const notes = generateRandomNotesArray(25);
+  const notes = generateRandomNotesArray(50);
 
   const currentNote = ref(null)
 </script>

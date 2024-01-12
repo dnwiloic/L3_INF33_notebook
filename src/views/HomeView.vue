@@ -1,9 +1,10 @@
 <script setup lang="ts">
   import { computed, onMounted,ref } from 'vue';
   import { useUserStore } from '@/stores/user';
-  import Acceuil from "./home/AcceuilHome.vue"
-  import AllNote from "./home/AllNote.vue"
-  import EvalationConfig from './home/EvalationConfig.vue';
+
+import { useTagsStore } from '@/stores/tags';
+
+  const tagStore = useTagsStore()
   const user = useUserStore();
   const side_nav = ref()
   const showFontBlack=ref(false)
@@ -87,10 +88,10 @@
           </li>
           <li class="">
             
-            <RouterLink to="" class="text-decoration-none nav-lk px-2 py-2 d-block d-flex justify-content-between">
+            <RouterLink :to="{name:'categories'}" class="text-decoration-none nav-lk px-2 py-2 d-block d-flex justify-content-between">
               
               <span> <font-awesome-icon icon="fa-solid fa-layer-group" /> Categorie</span>
-              <span class="bg-dark rounded-pill text-white py-0 px-2"> 02 </span>
+              <span class="bg-dark rounded-pill text-white py-0 px-2"> {{ tagStore.userTags.length }} </span>
                
             </RouterLink>
           </li>
@@ -103,18 +104,21 @@
           </li>
         </ul>
         <hr class="h-color mx-3">
-        <div class=" dropdown text-white">
-            <a  class="text-decoration-none nav-lk px-2 py-2 d-block " data-bs-toggle="collapse" href="#user_menu_profile" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <ul class="list-unstyled px-2">
+          <li>
+             <a  class="text-decoration-none nav-lk px-2 py-2 d-block " data-bs-toggle="collapse" href="#user_menu_profile" role="button" aria-expanded="false" aria-controls="collapseExample">
               <span><font-awesome-icon icon="fa-solid fa-user-large" /></span>
               <span>{{ user.user.name }}</span>
             </a>
-            <div class="collapse list-unstyled px-4 bg-dark" id="user_menu_profile" >
-              <li><RouterLink :to="{name:''}" class="text-decoration-none nav-lk px-2 py-2 d-block" href="#">Action</RouterLink></li>
-              <li><RouterLink :to="{name:''}" class="text-decoration-none nav-lk px-2 py-2 d-block" href="#">Another action</RouterLink></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><RouterLink :to="{name:''}" class="text-decoration-none nav-lk px-2 py-2 d-block" href="#">Se deconnecter</RouterLink></li>
-            </div>
-          </div>
+          </li>
+
+            <li><RouterLink :to="{name:''}" class="text-decoration-none nav-lk px-2 py-2 d-block" href="#">
+              <span><font-awesome-icon icon="right-from-bracket" /></span>
+              Se deconnecter
+            </RouterLink></li>
+          
+        </ul>
+        
       </div>
 
       <div class="content">

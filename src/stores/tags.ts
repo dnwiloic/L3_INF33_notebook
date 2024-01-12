@@ -23,8 +23,9 @@ export const useTagsStore = defineStore('tags', () => {
     { id: 16, content: 'motifM' },
     { id: 17, content: 'motifN' },
     { id: 18, content: 'motifO' },
-    { id: 19, content: 'motifP' },  
-  ]);
+    { id: 19, content: 'motifP' },
+   
+  ] );
 
   const fetchUserTags = (user_id: number) => {
     const tagModel = new TagsModel(user_id)
@@ -64,5 +65,5 @@ export const useTagsStore = defineStore('tags', () => {
 
 
 
-  return { userTags, fetchUserTags, createTag, deleteTag }
+  return { userTags, fetchUserTags, createTag, deleteTag, updateTag }
 })

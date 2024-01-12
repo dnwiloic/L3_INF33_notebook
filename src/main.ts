@@ -18,11 +18,11 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 /* import specific icons */
 import { faBarsStaggered, faClipboard, faDna,
      faHouse, faXmark, faLayerGroup, faStar, faMagnifyingGlass, faUserLarge, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { faUber } from '@fortawesome/free-brands-svg-icons'
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons/faRightFromBracket'
 
 /* add icons to the library */
-library.add(faBarsStaggered,faHouse, faPenToSquare, faTrash,
-      faUserLarge,faMagnifyingGlass , faClipboard, faStar, faXmark, faLayerGroup, faDna)
+library.add(faBarsStaggered,faHouse, faPenToSquare, faTrash, faRightFromBracket,
+      faUserLarge,faMagnifyingGlass , faClipboard, faStar , faXmark, faLayerGroup, faDna)
 
 
 const app = createApp(App)
