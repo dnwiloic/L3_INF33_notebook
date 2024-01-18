@@ -5,11 +5,17 @@ import { type note_statut } from "@/interfaces/note_status_enum";
 // Fonction pour générer un tableau d'objets de notes aléatoires
 export default class NoteModel{
   backendApi: BackendAPI;
+  user_id: number
   constructor(user_id:number){
     this.backendApi = new BackendAPI(`users/${user_id}/notes/`)
+    this.user_id = user_id
   }
 
-  createNote(note: Note){
+  createNote(note: Omit<Note, 'tags'>){
+    note.is_draft = false;
+    note.is_deleted=false;
+    delete(note.user_id)
+    console.log(note)
     return this.backendApi.post(note)
   }
 
@@ -22,7 +28,13 @@ export default class NoteModel{
   }
 
   updateNote(note: Note){
-    return this.backendApi.put(note, `${note.id}`)
+    delete(note.user_id)
+    delete(note.created_at)
+    delete(note.updated_at )
+    const id_note =note.id 
+    delete(note.id )
+    console.log(note)
+    return this.backendApi.put(note, `${id_note}`)
   }
 
   deleteNote(note_id:number){
@@ -34,6 +46,7 @@ export default class NoteModel{
   }
 
   removeNoteTag(note_id:number, tag_id:number){
+    console.log("link roump")
     return this.backendApi.delete({},`${note_id}/tags/${tag_id}`)
   }
 }
@@ -48,7 +61,7 @@ export function  generateRandomNotesArray(limit: number) :Array<Note>{
       question: `Question de la note ${i + 1}`,
       response: `Response a la quetion ${i+1}`,
       is_favorite: true,
-      created_date: new Date(),
+      created_at: new Date(),
       statut: 'acquied' as note_statut,
       tags: [
         { id: 1, content: 'TagA' },
@@ -63,18 +76,18 @@ export function  generateRandomNotesArray(limit: number) :Array<Note>{
   return notes.map((note,index)=>{
     note.is_favorite = false;
     note.statut='aquied'
-    note.created_date = '2024-01-01'
+    note.created_at = '2024-01-01'
     if(index%3 === 0){
       note.is_favorite = true;
       note.statut='not_aquied'
-      note.created_date = '2024-01-05'
+      note.created_at = '2024-01-05'
       note.tags = [
         { id: 2, content: 'TagB' },
         { id: 3, content: 'TagC' }
       ]
     }if(index%2 === 0){
       note.statut='in_aquisition'
-      note.created_date = '2024-01-10'
+      note.created_at = '2024-01-10'
       note.tags = [
         { id: 1, content: 'TagA' },
         { id: 2, content: 'TagB' },

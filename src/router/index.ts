@@ -8,6 +8,8 @@ import AllNoteVue from '@/views/home/AllNote.vue'
 import PassEvaluationVue from '@/views/evaluation/PassEvaluation.vue'
 import CorrectEvaluationVue from '@/views/evaluation/CorrectEvaluation.vue'
 import UserTagVue from '@/views/home/UserTag.vue'
+import { useUserStore } from '@/stores/user'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -55,7 +57,7 @@ const router = createRouter({
       component: CorrectEvaluationVue
     },
     {
-      path: '/evaluation/:nbrNotes',
+      path: '/evaluation/:nbrNotes/:tags*',
       name: 'evaluation',
       component: PassEvaluationVue,
     },
@@ -68,6 +70,19 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     }
   ]
+})
+
+router.beforeEach(async (to, from) => {
+  const userStore = useUserStore();
+   if (
+    // make sure the user is authenticated
+    (!userStore.isAuthentificate) && 
+    // ❗️ Avoid an infinite redirect
+    (to.name !== 'login' && to.name !== 'register') 
+  ) {
+    // redirect the user to the login page
+    return { name: 'login' }
+  }
 })
 
 export default router

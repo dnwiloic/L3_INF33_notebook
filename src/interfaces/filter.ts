@@ -9,7 +9,7 @@ export default interface FilterOption{
     question?: string,
     response?: string,
     tags?: Array<Tag>
-    created_date?: {
+    created_at?: {
         debut?: Date|string,
         fin?: Date|string
     },

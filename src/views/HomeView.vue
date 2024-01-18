@@ -3,11 +3,19 @@
   import { useUserStore } from '@/stores/user';
 
 import { useTagsStore } from '@/stores/tags';
+import { useNoteStore } from '@/stores/notes';
 
   const tagStore = useTagsStore()
   const user = useUserStore();
   const side_nav = ref()
   const showFontBlack=ref(false)
+  const noteStore = useNoteStore()
+  const userStore = useUserStore()
+
+tagStore.fetchUserTags(userStore.user!.id!)
+noteStore.fetchUserNotes(userStore.user!.id!)
+console.log(tagStore.userTags)
+
   function toggleActive(domElt: HTMLElement|null){
     if(!domElt) return
     if(domElt.classList.contains('active')){
@@ -26,13 +34,13 @@ import { useTagsStore } from '@/stores/tags';
     document.querySelectorAll(".btn-close").forEach(elt=>{
       console.log(elt.tagName)
       elt.addEventListener('click', function(event){
-        toggleActive(document.getElementById(elt.getAttribute('to-close')))
+        toggleActive(document.getElementById(elt.getAttribute('to-close')||''))
       })
     })
     document.querySelectorAll(".open-btn").forEach(elt=>{
       
       elt.addEventListener('click', function(event){
-        toggleActive(document.getElementById(elt.getAttribute('to-open')))
+        toggleActive(document.getElementById(elt.getAttribute('to-open')||''))
       })
     })
 
@@ -105,16 +113,19 @@ import { useTagsStore } from '@/stores/tags';
         </ul>
         <hr class="h-color mx-3">
         <ul class="list-unstyled px-2">
-          <li>
-             <a  class="text-decoration-none nav-lk px-2 py-2 d-block " data-bs-toggle="collapse" href="#user_menu_profile" role="button" aria-expanded="false" aria-controls="collapseExample">
-              <span><font-awesome-icon icon="fa-solid fa-user-large" /></span>
-              <span>{{ user.user.name }}</span>
+          <li >
+             <a  class="text-decoration-none nav-lk px-2 py-2 d-flex gap-2 " data-bs-toggle="collapse" href="#user_menu_profile" role="button" aria-expanded="false" aria-controls="collapseExample">
+              <span class="d-inline-block m-r2"><font-awesome-icon icon="fa-solid fa-user-large" /></span>
+              <span class="marquee">
+                <span class="text">{{ user.user!.user_name}}</span>
+              </span>
+              
             </a>
           </li>
 
-            <li><RouterLink :to="{name:''}" class="text-decoration-none nav-lk px-2 py-2 d-block" href="#">
-              <span><font-awesome-icon icon="right-from-bracket" /></span>
-              Se deconnecter
+            <li><RouterLink  :to="{name:'login'}" class="text-decoration-none nav-lk px-2 py-2 d-block" href="#">
+              <span @click="user.logOut" ><font-awesome-icon icon="right-from-bracket" />
+              Se deconnecter</span>
             </RouterLink></li>
           
         </ul>
@@ -128,7 +139,7 @@ import { useTagsStore } from '@/stores/tags';
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="d-none d-lg-block ">
-              <p>Bienvenu {{ user.user.name }}</p>
+              <p>Bienvenu {{ user.user!.user_name }}</p>
             </div>
               <div class=" d-sm-none " >
                 <button class="btn open-btn" to-open="global_search">
@@ -230,4 +241,23 @@ hr.h-color{
   }
 }
 
+/* user name animation */
+.marquee {
+  display: inline-block;
+  max-width: 10ch;
+  overflow: hidden;
+  position: relative;
+}
+
+.text {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 30s 3s linear infinite alternate forwards;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  80% {transform: translateX(-50%); }
+  100% { transform: translateX(-1000%); }
+}
 </style>

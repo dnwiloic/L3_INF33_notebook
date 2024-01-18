@@ -1,19 +1,27 @@
 <script setup lang="ts">
-import  {ref, computed} from 'vue'
+import  {ref, computed, watch} from 'vue'
 import {useUiStore} from '../../stores/ui'
 import NoteFilter from '../forms/NoteFilterForm.vue';
 import NoteForm from '../forms/NoteForm.vue';
 import { useFilterStore } from '@/stores/filter';
 import type Note from '@/interfaces/note';
 import SelectPage from './SelectPage.vue';
+import type { FormAction } from '../forms/TagForm.vue';
+import DeleteNote from '../forms/DeleteNote.vue';
 
 
     const filterStore = useFilterStore()
     const props = defineProps(['notes'])
     const original_notes = props.notes as Array<Note>
     const notes = ref(props.notes as Array<Note>)
+    watch(props.notes,()=>{
+        notes.value=props.notes
+    })
     const uis = useUiStore();
     const currentPage = ref(1)
+
+    const currentNote = ref({} as Note)
+    const noteFormAction = ref('add' as FormAction)
 
     const nbrPages = computed(()=>{
         return Math.ceil( notes.value.length/uis.nbrElementsByTables)
@@ -40,8 +48,9 @@ import SelectPage from './SelectPage.vue';
     <div class="m-5">
         <div class="d-flex justify-content-between">
             <NoteFilter  @launch-filter="launch_filter"/>
-            <button class="btn btn-primary" data-bs-toggle="modal"  :data-bs-target="'#'+uis.noteFormId">Ajouter</button>
-            <NoteForm :note="{}" />
+            <button class="btn btn-primary" @click="noteFormAction='add'" data-bs-toggle="modal"  :data-bs-target="'#'+uis.noteFormId">Ajouter</button>
+            <NoteForm :note="currentNote" :action="noteFormAction" />
+            <DeleteNote :note="currentNote"/>
         </div>
         
         <table>
@@ -63,13 +72,22 @@ import SelectPage from './SelectPage.vue';
                 <tr v-for="note in showerTable" :key="note.id">
                     <td><input type="checkbox"></td>
                     <td><span>{{ note.title }}</span></td>
-                    <td></td>
+                    <td @click="currentNote=note;">
+                        <button 
+                            @click="()=>{
+                                 
+                                noteFormAction='update'
+                                }" 
+                            class="btn btn-success mx-2"
+                            data-bs-toggle="modal"  :data-bs-target="'#'+uis.noteFormId">Modifier</button>
+                        <button class="btn btn-danger mx-2" data-bs-toggle="modal" :data-bs-target="'#'+uis.deleteNoteConfimationForm">Supprimer</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
         <div class="m-3" >
             <div class="d-flex justify-content-end align-item-center">
-                <SelectPage v-if="nbrPages>=1" v-model:currentPage="currentPage" v-model:nbrPages="nbrPages" />
+                <SelectPage v-if="nbrPages>=1"  v-model:currentPage="currentPage" v-model:nbrPages="nbrPages" />
             </div>
         </div>
     </div>

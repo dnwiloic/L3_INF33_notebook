@@ -2,6 +2,7 @@
 import { useTestStore } from '@/stores/test';
 import {ref} from 'vue';
 const testStore = useTestStore()
+
 </script>
 <template>
     <div id="question-card">
@@ -9,8 +10,8 @@ const testStore = useTestStore()
             <div class="mb-3">
                 <label for="note-title" class="col-form-label"> {{ testStore.currentNote.question }}</label>
                 <input type="text" class="form-control" id="note-title"
-                        :value="testStore.currentNote.user_response"
-                        @change="testStore.setUserResponse($event.target.value)">
+                        v-model="testStore.currentNote.user_response"
+                        >
             </div>
         </div>
     </div>

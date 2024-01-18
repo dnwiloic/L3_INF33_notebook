@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref , computed, onMounted, watch, type Ref} from 'vue';
+import { ref , computed, onMounted, watch, type Ref, onUpdated, type ComputedRef} from 'vue';
 import {useTagsStore} from "../../stores/tags"
 import { useUserStore } from '@/stores/user';
 import type Tag from '@/interfaces/tag';
@@ -8,32 +8,66 @@ const taggMotif = ref('')
 const tagStore = useTagsStore();
 const userStore = useUserStore();
 
+const props = defineProps(['enableCreation',])
 const tags_selected =  defineModel('tags_selected') as Ref<Array<Tag>>
-const tags_list = defineModel('tags_list') as Ref<Array<Tag>>
+const tags_list = computed(()=>tagStore.userTags) as ComputedRef<Array<Tag>>
 
-const tags = ref( tags_list.value.map(elt=>{
+    onUpdated(()=>{
+        console.log('updated tag selector')
+        console.log(tags_list.value)
+    })
+
+const tags = computed(()=> tags_list.value.map(elt=>{elt
+    const tags_selected_ids = tags_selected.value.map(tg=>tg.id)
     return {
         ...elt,
-        selected : tags_selected.value.includes(elt)
+        selected : tags_selected_ids.includes(elt.id)
     }
 }))
 
-watch(tags.value,()=>{
-    const selected_tags = [] as Array<Tag>
-    tags.value.forEach(elt => {
-        if(elt.selected)  selected_tags.push({id:elt.id, content: elt.content})
-    })
-    tags_selected.value = selected_tags
-})
+const update_tags = (tag: Tag&{selected: boolean}) => {
+    if(tag.selected && !tags_selected.value.includes(tag)){
+        console.log()
+        tags_selected.value.push(tag)
+    }
+    else
+        tags_selected.value = tags_selected.value.filter(tg => tg.id !== tag.id)
+}
+// watch(tags.value,()=>{
+//     console.log("change")
+//     const selected_tags = [] as Array<Tag>
+//     tags.value.forEach(elt => {
+//         if(elt.selected)  selected_tags.push({id:elt.id, content: elt.content})
+//     })
+//     tags_selected.value = selected_tags
+// })
 
 
 const quick_create_tag = () => {
     const tag = {
         content: taggMotif.value
     } as Tag
-    tagStore.createTag(userStore.user.id, tag)
+    tagStore.createTag(userStore.user!.id!, tag)
+    
 }
-const showAll = ref(false)
+const showCreateTag = computed(()=>{
+    if(!props.enableCreation){
+        return false
+    }else if(
+        tagsResult.value.filter(elt=> (elt.content===taggMotif.value)).length === 0 
+        && taggMotif.value!==''
+        ) return true
+    else  return false
+})
+
+const selectAll = ref(false)
+const select_deselect_all = ()=>{
+    for( const tg of tags.value){
+        tg.selected = !selectAll.value
+        update_tags(tg)
+    }
+    selectAll.value = !selectAll.value
+}
 
 const tagsResult = computed(()=>{
     console.log(taggMotif.value)
@@ -77,12 +111,16 @@ onMounted(()=>{
     <span v-for="tag, index in selectedTags" :key="index" class="tag-flag">{{ tag.content }}</span>
     <div id="select-tags">
         <input type="text" class="form-control" id="tag-input" v-model="taggMotif">
-        <div id="tags-result">    
+        <div id="tags-result">
+            <!--<a href="#" @click="select_deselect_all">
+                <span v-if="!selectAll">Tous selectionner</span>
+                <span v-else>Tous déselectionner</span>
+            </a> -->
             <div class="tagItems" v-for="tag, index in tagsResult" :key="index">
-                <input type="checkbox" class="form-check-input" :id="''+tag.id" v-model="tag.selected">
+                <input type="checkbox" class="form-check-input" @change="()=>{update_tags(tag)}" :id="''+tag.id" v-model="tag.selected">
                 <label :for="''+tag.id" class="form-label">{{ tag.content }}</label>
             </div>
-            <button v-if="tagsResult.length===0" @click="quick_create_tag" class="btn border-primary">
+            <button v-if="showCreateTag" @click="quick_create_tag" class="btn border-primary">
                 Cree <span class="fw-bold">{{ taggMotif }}</span>
             </button>
         </div>

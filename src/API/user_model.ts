@@ -9,18 +9,15 @@ export default class UserModel{
     this.backendApi = new BackendAPI(`users/`)
   }
 
-  create(user: {
-    user_name: string,
-    password:string
-  }){
+  create(user: User){
     return this.backendApi.post(user)
   }
 
   signIn(user: {
-    user_name: string,
-    password:string
+    email: string,
+    password: string
   }){
-    return this.backendApi.post(user,'signin')
+    return this.backendApi.post(user,'auth/')
   }
   getAllUser(){
     return this.backendApi.get()

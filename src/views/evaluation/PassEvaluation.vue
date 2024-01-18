@@ -18,11 +18,20 @@ import CorrectionCard from '@/components/evaluation/CorrectionCard.vue'
 const router=useRouter()
 const route = useRoute()
 const testStore = useTestStore()
-const nbrNotes = route.params.nbrNotes as number 
+const tmpNbrNotes: string | string[] = route.params.nbrNotes;
+const tmpTag: string | string[] = route.params.tags
+// Utilisez une assertion de type pour indiquer à TypeScript que vous savez que c'est une chaîne
+const nbrNotesAsString: string = Array.isArray(tmpNbrNotes) ? tmpNbrNotes[0] : tmpNbrNotes;
+const tagsArray :Array<string> =  Array.isArray(tmpTag) ? tmpTag: [tmpTag]
+// Maintenant, vous pouvez utiliser parseInt en toute sécurité
+const nbrNotes: number = parseInt(nbrNotesAsString);
 
+const tags = tagsArray.map((tg)=> parseInt(tg))
   
-
-testStore.initTest(nbrNotes)
+const test_is_loaded = ref(false)
+ testStore.initTest(tags, nbrNotes).then((res)=>{
+    test_is_loaded.value = res
+ })
 const test = computed(()=>testStore.test)
 
 const showForm = ref(true)
@@ -56,7 +65,7 @@ function terminer(){
 }
 </script>
 <template>
-    <div id="question">
+    <div v-if="test_is_loaded" id="question">
         <Transition>
             <div v-if="showForm" class="question-card-form">
                 <EvaluationCard  v-if="testStore.statut === test_status_enum.in_test"/>
@@ -82,6 +91,11 @@ function terminer(){
             </div>
         </Transition>
     </div>
+    <div v-else class="d-flex vh-100 justify-content-center align-items-center">
+        <div class="bg-white p-5 text-center">
+            loading...
+        </div>
+    </div>
 </template>
 <style scoped>
 #question{
@@ -105,9 +119,9 @@ function terminer(){
 .question-card-form{
     background-color: white;
     padding: 2em;
-    margin-top: 3em;
+    /* margin-top: 3em; */
     max-width: 25em;
     margin-inline: auto;
-    transform: translateY(-50%);
+    transform: translateY(-10%);
 }
-</style>@/interfaces/test_state_enum
+</style>

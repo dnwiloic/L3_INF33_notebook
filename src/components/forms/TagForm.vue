@@ -2,48 +2,46 @@
 import type Tag from '@/interfaces/tag';
 import { useTagsStore } from '@/stores/tags';
 import { useUserStore } from '@/stores/user';
-import {computed, ref, type ComputedRef} from 'vue'
+import {computed, ref, type ComputedRef, watch, type Ref} from 'vue'
 
-type TagFormAction = 'add' | 'update'
+export type FormAction = 'add' | 'update'
 
 const userStore = useUserStore()
 const tagStore =  useTagsStore()
 const props = defineProps(['tag'])
-const addPriority = defineModel('addPriority')
-const tag = computed(()=>{
-    if(addPriority.value)
-        return {content:''} as Tag
-    return props.tag as Tag
+const action = defineModel('action') as Ref<FormAction>
+const tag = ref(props.tag)
+
+
+const formTitle = ref('Ajouter une Categorie')
+
+watch(action, ()=>{
+    if(action.value === 'update'){
+        tag.value = props.tag
+        formTitle.value = 'Modifier une Categorie'
+    }else{
+        tag.value = {
+            content : ''
+        }
+        formTitle.value = 'Ajouter une Categorie'
+    }
 })
-
-const action = computed(()=>{
-   return tag.value.id===undefined?'add':'update'
-
-}) as ComputedRef<TagFormAction>
-
-const formTitle = computed(()=>{
-    if(action.value === 'update')
-        return 'Modifier une Categorie'
-    
-     return 'Ajouter une Categorie'
-})
-
 const saveTag = () => {
     if(action.value === 'update')
     {
-        tagStore.updateTag(userStore.user.id, tag.value)
+        tagStore.updateTag(userStore.user!.id!, tag.value)
         return
     }
     if(action.value === 'add'){
-        tagStore.createTag(userStore.user.id, tag.value)
+        tagStore.createTag(userStore.user!.id!, tag.value)
         return
     }
 
 }
 </script>
 <template>
-<button class="btn btn-primary" @click="addPriority=true"  data-bs-toggle="modal"  data-bs-target="#tag_form">Ajouter</button>
- <div class="modal fade" id="tag_form" tabindex="-1" aria-labelledby="tag_form" aria-hidden="true" @blur="addPriority=false">
+<button class="btn btn-primary" @click="action='add'"  data-bs-toggle="modal"  data-bs-target="#tag_form">Ajouter</button>
+ <div class="modal fade" id="tag_form" tabindex="-1" aria-labelledby="tag_form" aria-hidden="true" >
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

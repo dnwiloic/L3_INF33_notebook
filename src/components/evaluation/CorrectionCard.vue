@@ -60,6 +60,9 @@ watch(score,async ()=>{
 
 <style scoped>
 
+#correction-card{
+    
+}
 .radio_eval{
     padding: 1rem;
     border-radius: 1rem;

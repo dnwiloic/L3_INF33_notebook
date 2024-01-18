@@ -25,12 +25,14 @@ watch(currentPage, ()=>{
     console.log(currentPage.value);
 })
 </script>
-<template>
-    <button class="btn changePage" @click="currentPage--" :disabled="currentPage===1">Prev</button>
-    <button class="btn changePage" v-for="i in (showerIndexPage as Array<number>)" @click="currentPage=i" :class="currentPage===i?'current':''" :key="''+i">
-        {{ i }} 
-    </button>
-    <button class="btn changePage" @click="currentPage++" :disabled="currentPage===nbrPages">Next</button>
+<template >
+    <div v-if="nbrPages>=2">
+        <button class="btn changePage" @click="currentPage--" :disabled="currentPage===1">Prev</button>
+        <button class="btn changePage" v-for="i in (showerIndexPage as Array<number>)" @click="currentPage=i" :class="currentPage===i?'current':''" :key="''+i">
+            {{ i }} 
+        </button>
+        <button class="btn changePage" @click="currentPage++" :disabled="currentPage===nbrPages">Next</button>
+    </div>
 </template>
 <style scoped>
 .changePage{

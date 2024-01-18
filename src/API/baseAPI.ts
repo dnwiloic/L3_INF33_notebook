@@ -10,11 +10,11 @@ class BackendAPI {
 
     constructor(uri: string) {
         const regexURL = /^(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})+)(?:\/[^\s]*)?$/;
-        if(BACKEND_URL && BACKEND_URL.match(regexURL)) {
+        // if(BACKEND_URL && BACKEND_URL.match(regexURL)) {
             this.baseUrl =BACKEND_URL + uri;
-        }else{
-            throw new Error('Icorector or inexisting backend url')
-        }
+        // }else{
+            // throw new Error('Icorect or missing backend url')
+        // }
         
     }
 
@@ -62,9 +62,7 @@ class BackendAPI {
         const body = data || {}
         return await fetch(`${this.baseUrl}${endpoint}`, {
             method: 'DELETE',
-            body: body.stringify(),
-            headers: headerWithoutToken
-        });
+            });
     }
 
 }

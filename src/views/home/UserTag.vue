@@ -1,18 +1,26 @@
 <script setup lang="ts">
-import TagForm from '@/components/forms/TagForm.vue';
+import DeleteTag from '@/components/forms/DeleteTag.vue';
+import TagForm, { type FormAction } from '@/components/forms/TagForm.vue';
 import SelectPage from '@/components/note/SelectPage.vue';
+import type Tag from '@/interfaces/tag';
 import { useTagsStore } from '@/stores/tags';
 import { useUiStore } from '@/stores/ui';
-import { computed, ref} from 'vue';
+import { useUserStore } from '@/stores/user';
+import { computed, ref, type Ref} from 'vue';
 
 const uis = useUiStore();
 const tagStore = useTagsStore()
 const currentPage = ref(1)
 const currentTag = ref({content:''})
 const addPriority = ref(true)
+const userStore = useUserStore()
 
+console.log(userStore.isAuthentificate)
+tagStore.fetchUserTags(userStore.user!.id!)
+const formAction = ref('add') as Ref<FormAction>
 const tags = computed(()=>{
-    return tagStore.userTags
+    console.log(tagStore.userTags)
+    return tagStore.userTags as Array<Tag>
 })
 
 const nbrPages = computed(()=>{
@@ -32,13 +40,14 @@ const showerTable = computed(()=>{
 <template>
     <div class="m-5">
         <div class="d-flex justify-content-end">
-            <TagForm :tag="currentTag" v-model:addPriority="addPriority" />
+            <TagForm :tag="currentTag" v-model:action="formAction" />
+            <DeleteTag :tag="currentTag" />
         </div>
         
         <table>
             <thead>
                 <tr>
-                    <th>Selectionner</th>
+                    <th>Selectiontiner</th>
                     <th>titre de la categories</th>
                     <th>Nombre de note liée</th>
                     <th>Actions</th>
@@ -56,12 +65,12 @@ const showerTable = computed(()=>{
                     <td><input type="checkbox"></td>
                     <td><span>{{ tag.content }}</span></td>
                     <td>{{ }}</td>
-                    <td>
+                    <td @click="currentTag=tag">
                         <button 
-                            @click="()=>{currentTag=tag; addPriority=false}" 
+                            @click="()=>{currentTag=tag; formAction='update'}" 
                             class="btn btn-success mx-2"
                             data-bs-toggle="modal"  data-bs-target="#tag_form">Modifier</button>
-                        <button class="btn btn-danger mx-2">Supprimer</button>
+                        <button class="btn btn-danger mx-2"  data-bs-toggle="modal" :data-bs-target="'#'+uis.deleteTagConfimationForm">Supprimer</button>
                     </td>
                 </tr>
             </tbody>

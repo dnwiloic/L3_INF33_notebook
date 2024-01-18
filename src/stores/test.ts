@@ -4,10 +4,14 @@ import { test_status_enum } from '@/interfaces/test_state_enum'
 import type Test from '@/interfaces/Test'
 import { generateRandomNotesArray } from '@/API/note_model'
 import type Note from '@/interfaces/note'
-
+import { useUserStore } from './user'
+import EvaluationModel from '@/API/evaluation_model'
+import type Tag from '@/interfaces/tag'
 
 
 export const useTestStore = defineStore('tests',()=>{
+    const user = useUserStore().user
+    const evalModel = new EvaluationModel(user!.id!)
     const statut = ref(test_status_enum.not_started)
     const notes = ref([] as Array<Note & {user_response?:string, score?:number}>)
     const score = computed(()=>{
@@ -17,9 +21,20 @@ export const useTestStore = defineStore('tests',()=>{
     })
     const currentNoteIndex = ref(0)
     
-    const initTest = (nbr_questions: number)=>{
+    const initTest = async (tags: Array<number>, nbr_questions: number)=>{
         statut.value = test_status_enum.in_test
-        notes.value = generateRandomNotesArray(nbr_questions)
+        try{
+            console.log('getting not')
+            const res = await evalModel.random_note(tags, nbr_questions)
+            notes.value = await res.json()
+            console.log(notes.value )
+            return true
+        }
+        catch(err){
+            console.log("Une erreur est survenu lors de la Collecte des question")
+            notes.value = []
+            return false
+        }
         currentNoteIndex.value = 0;
     }
 

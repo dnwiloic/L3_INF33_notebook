@@ -13,11 +13,6 @@
         <div id="note_card_action">
           <div class="d-flex justify-content-between " >
               <button class="btn">
-                <font-awesome-icon :icon="['far', 'star']" />
-                <font-awesome-icon :icon="['fas', 'star']" />
-                <font-awesome-icon :icon="['fal', 'star']" />
-                <font-awesome-icon :icon="['fad', 'star']" />
-                <font-awesome-icon :icon="['fat', 'star']" />
                 <font-awesome-icon icon="fa-solid fa-star" />
               </button>
               <button class="btn" data-bs-toggle="modal" :data-bs-target="'#'+uis.noteFormId">

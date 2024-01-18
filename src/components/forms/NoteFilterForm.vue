@@ -15,7 +15,7 @@ const filterParams = ref(filterStore.NoteFilterParam)
 filterParams.value.statut = ['aquied', 'in_aquisition', 'not_aquied'] as Array<note_statut>
 filterParams.value.favorite = true
 filterParams.value.not_favorite = true
-filterParams.value.created_date = {}
+filterParams.value.created_at = {}
 filterParams.value.tags = []
 
 const filtrer = ()=>{
@@ -82,11 +82,11 @@ const filtrer = ()=>{
                         <div class="d-flex justify-content-between">
                             <div class="">
                                 <label for="date_debut" class="form-label">Du</label>
-                                <input id="date_debut" type="date" v-model="filterParams.created_date!.debut"  class="form-control" >
+                                <input id="date_debut" type="date" v-model="filterParams.created_at!.debut"  class="form-control" >
                             </div >
                             <div class="">
                                 <label for="date_fin" class="form-label">Au</label>
-                                <input id="date_fin" v-model="filterParams.created_date!.fin" type="date" class="form-control" >
+                                <input id="date_fin" v-model="filterParams.created_at!.fin" type="date" class="form-control" >
                             </div>
                         </div>
                     </div>

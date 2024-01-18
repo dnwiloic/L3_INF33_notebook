@@ -1,6 +1,4 @@
-import type Note from "@/interfaces/note";
 import BackendAPI from "./baseAPI";
-import type User from "@/interfaces/user";
 import type Tag from "@/interfaces/tag";
 
 // Fonction pour générer un tableau d'objets de notes aléatoires
@@ -23,11 +21,12 @@ export default class TagsModel{
   }
 
   update(tag_id:number, tag: Tag){
-    return this.backendApi.put(tag,`${tag_id}`)
+    const tmp_tag = {content: tag.content}
+    return this.backendApi.put(tmp_tag,`${tag_id}`)
   }
 
   delete(tag_id:number){
-    return this.backendApi.delete({},`${tag_id}`)
+    return this.backendApi.delete({},`{note_id}?tag_id=${tag_id}`)
   }
 
 }
