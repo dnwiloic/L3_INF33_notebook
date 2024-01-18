@@ -35,23 +35,19 @@ export const useUserStore = defineStore('user', () => {
   const signUp = async (userInfo: User) =>{
     const user_model = new UserModel()
     let message=null;
-    const res = await user_model.create(userInfo);
-    if(res.ok){
-      res.json()
-      .then( usr => {
-        message="success"
-        
-        user.value = usr
+    
+    try{
+      const res = await user_model.create(userInfo);
+      if(res.ok){
+        user.value = await res.json()
         localStorage.setItem('user', JSON.stringify(user))
-
-        isAuthentificate.value=false
-      })
-      .catch(err=>{message=err})
-    }else{
-      message = "Une erreur est survenu veuillew reaisseyer"
-      
-    }
-    return message
+        isAuthentificate.value = true 
+        message="success"
+        }console.log(user.value)
+        return true    
+      }catch(err){
+        return false
+      }
   }
 
   const logOut = () => {

@@ -1,27 +1,31 @@
 <script setup lang="ts">
-    import {ref} from 'vue'
-    import '../../assets/form.css'
+import {ref} from 'vue'
+import '../../assets/form.css'
 import { useCounterStore } from '@/stores/counter';
 import { useUserStore } from '@/stores/user';
+import { useRouter } from 'vue-router';
+const router = useRouter()
+const userStore = useUserStore()
+const formData = ref({
+    nom: '',
+    prenom: '',
+    email: '',
+    password: '',
+    confirm_password: '',
+})
 
-    const userStore = useUserStore()
-    const formData = ref({
-        nom: '',
-        prenom: '',
-        email: '',
-        password: '',
-        confirm_password: '',
-    })
-
-    const submit = () => {
-        if(formData.value.password === formData.value.confirm_password)
-            userStore.signUp(
-        {
+const submit = async () => {
+    if(formData.value.password === formData.value.confirm_password)
+    {
+        const res = await userStore.signUp({
             user_name: formData.value.nom + formData.value.prenom,
             email: formData.value.email,
             password: formData.value.password,
-        })
+            })
+        if(res)
+        router.push({name:'accueil'})
     }
+}
 </script>
 
 <template>

@@ -6,7 +6,6 @@ import AcceuilHomeVue from '@/views/home/AcceuilHome.vue'
 import EvalationConfigVue from '@/views/home/EvalationConfig.vue'
 import AllNoteVue from '@/views/home/AllNote.vue'
 import PassEvaluationVue from '@/views/evaluation/PassEvaluation.vue'
-import CorrectEvaluationVue from '@/views/evaluation/CorrectEvaluation.vue'
 import UserTagVue from '@/views/home/UserTag.vue'
 import { useUserStore } from '@/stores/user'
 
@@ -51,11 +50,7 @@ const router = createRouter({
       name: 'register',
       component: RegisterView
     },
-    {
-      path: '/evaluation/correction',
-      name: 'evalution_correction',
-      component: CorrectEvaluationVue
-    },
+
     {
       path: '/evaluation/:nbrNotes/:tags*',
       name: 'evaluation',
