@@ -8,14 +8,23 @@ import type Note from '@/interfaces/note';
 import SelectPage from './SelectPage.vue';
 import type { FormAction } from '../forms/TagForm.vue';
 import DeleteNote from '../forms/DeleteNote.vue';
+import { useUserStore } from '@/stores/user';
+import { useNoteStore } from '@/stores/notes';
 
+    const noteStore = useNoteStore()
+    const userStore = useUserStore()
+    const note_fetched = ref(undefined as boolean | undefined)
+
+    noteStore.fetchUserNotes(userStore.user!.id!).then(
+        res=> note_fetched.value = res
+    )
+
+    const original_notes = computed(()=> useNoteStore().allNotes)
 
     const filterStore = useFilterStore()
-    const props = defineProps(['notes'])
-    const original_notes = props.notes as Array<Note>
-    const notes = ref(props.notes as Array<Note>)
-    watch(props.notes,()=>{
-        notes.value=props.notes
+    const notes = ref([] as Array<Note>)
+    watch(note_fetched,()=>{
+        notes.value = original_notes.value
     })
     const uis = useUiStore();
     const currentPage = ref(1)
@@ -31,7 +40,7 @@ import DeleteNote from '../forms/DeleteNote.vue';
         
         const start = (currentPage.value - 1) * uis.nbrElementsByTables
         const end = currentPage.value * uis.nbrElementsByTables - 1
-        
+        console.log(notes.value)
         const note2 = notes.value.filter( (value, index)=>(index>=start && index<=end))
         return note2
     })
@@ -39,16 +48,16 @@ import DeleteNote from '../forms/DeleteNote.vue';
     
 
     function launch_filter(){
-        notes.value = filterStore.NotesFilter(original_notes)
+        notes.value = filterStore.NotesFilter(original_notes.value)
         currentPage.value = 1
     }
 </script>
 <template>
     
-    <div class="m-5">
+    <div v-if="note_fetched" class="m-5">
         <div class="d-flex justify-content-between">
             <NoteFilter  @launch-filter="launch_filter"/>
-            <button class="btn btn-primary" @click="noteFormAction='add'" data-bs-toggle="modal"  :data-bs-target="'#'+uis.noteFormId">Ajouter</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" @click="noteFormAction='add'" :data-bs-target="'#'+uis.noteFormId">Ajouter</button>
             <NoteForm :note="currentNote" :action="noteFormAction" />
             <DeleteNote :note="currentNote"/>
         </div>
@@ -75,12 +84,15 @@ import DeleteNote from '../forms/DeleteNote.vue';
                     <td @click="currentNote=note;">
                         <button 
                             @click="()=>{
-                                 
                                 noteFormAction='update'
                                 }" 
                             class="btn btn-success mx-2"
-                            data-bs-toggle="modal"  :data-bs-target="'#'+uis.noteFormId">Modifier</button>
-                        <button class="btn btn-danger mx-2" data-bs-toggle="modal" :data-bs-target="'#'+uis.deleteNoteConfimationForm">Supprimer</button>
+                            data-bs-toggle="modal"  :data-bs-target="'#'+uis.noteFormId">
+                            <font-awesome-icon icon="fa-solid fa-pen-to-square" />
+                        </button>
+                        <button class="btn btn-danger mx-2" data-bs-toggle="modal" :data-bs-target="'#'+uis.deleteNoteConfimationForm">
+                            <font-awesome-icon icon="fa-solid fa-trash" />
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -90,6 +102,9 @@ import DeleteNote from '../forms/DeleteNote.vue';
                 <SelectPage v-if="nbrPages>=1"  v-model:currentPage="currentPage" v-model:nbrPages="nbrPages" />
             </div>
         </div>
+    </div>
+    <div v-else class="d-flex vh-100 justify-content-center align-items-center">
+        <div class="bg-warning p-3 fw-bold">Loading...</div>
     </div>
 </template>
 <style scoped>

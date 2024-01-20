@@ -1,5 +1,5 @@
 
-const BACKEND_URL = "http://localhost:8000/"
+const VITE_API_URL = import.meta.env.VITE_API_URL
 const headerWithoutToken = {
     'Content-Type': 'application/json'
 }
@@ -10,8 +10,8 @@ class BackendAPI {
 
     constructor(uri: string) {
         const regexURL = /^(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})+)(?:\/[^\s]*)?$/;
-        // if(BACKEND_URL && BACKEND_URL.match(regexURL)) {
-            this.baseUrl =BACKEND_URL + uri;
+        // if(VITE_API_URL && VITE_API_URL.match(regexURL)) {
+            this.baseUrl =VITE_API_URL + uri;
         // }else{
             // throw new Error('Icorect or missing backend url')
         // }

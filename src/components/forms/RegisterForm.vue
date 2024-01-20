@@ -18,7 +18,7 @@ const submit = async () => {
     if(formData.value.password === formData.value.confirm_password)
     {
         const res = await userStore.signUp({
-            user_name: formData.value.nom + formData.value.prenom,
+            user_name: formData.value.nom + " " + formData.value.prenom,
             email: formData.value.email,
             password: formData.value.password,
             })

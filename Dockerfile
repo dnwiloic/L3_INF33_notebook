@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Installez les dépendances
-RUN npm install
+RUN yarn install
 
 # Construisez votre application
 # RUN npm run build
@@ -17,4 +17,4 @@ RUN npm install
 EXPOSE 8080
 
 # Commande pour démarrer votre application
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]

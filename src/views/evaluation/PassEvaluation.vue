@@ -59,14 +59,12 @@ function terminer(){
     {
         router.push({name:'accueil'})
     }
-    console.log(testStore.statut)
    testStore.changeStep()
-   console.log(testStore.statut)
 }
 </script>
 <template>
     <div v-if="test_is_loaded" id="question">
-        <Transition>
+        <Transition v-if="testStore.test.length >= 1">
             <div v-if="showForm" class="question-card-form">
                 <EvaluationCard  v-if="testStore.statut === test_status_enum.in_test"/>
                 <div v-else-if="testStore.statut === test_status_enum.halfway">
@@ -74,7 +72,7 @@ function terminer(){
                 </div>
                 <CorrectionCard  v-else-if="testStore.statut === test_status_enum.in_correction"/>
                 <div v-else-if="testStore.statut === test_status_enum.finish">
-                    <p> Score final: {{ testStore.score }} <br>
+                    <p> Score final: {{ testStore.score +"/"+testStore.notes.length }} <br>
                         Vous pouvez retourner a l'accueil en cliquant sur le boutton terminer
                     </p>
                 </div>
@@ -90,6 +88,12 @@ function terminer(){
                 </div>
             </div>
         </Transition>
+        <div v-else class="d-flex vh-100 justify-content-center align-items-center">
+            <div class="bg-white p-5 text-center text-danger">
+                Nous n'avons pas pu charger les questions. 
+                <RouterLink :to="{name: 'accueil'}"> retourner a l'accueil</RouterLink>
+            </div>
+        </div>
     </div>
     <div v-else class="d-flex vh-100 justify-content-center align-items-center">
         <div class="bg-white p-5 text-center">
@@ -120,7 +124,7 @@ function terminer(){
     background-color: white;
     padding: 2em;
     /* margin-top: 3em; */
-    max-width: 25em;
+    max-width: 60%;
     margin-inline: auto;
     transform: translateY(-10%);
 }

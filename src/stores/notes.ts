@@ -13,13 +13,16 @@ const check_note_content_tag= (note: Note, tag:Tag) =>{
 }
 export const useNoteStore = defineStore('Notes', () => {
   const allNotes = ref({} as Array<Note>)
-  const fetchUserNotes = (user_id: number) => {
+  const fetchUserNotes = async (user_id: number) => {
     const noteModel = new NoteModel(user_id)
-    noteModel.getAllUserNotes().then( res => {
-      res.json().then( notes => {
-        allNotes.value = notes
-      })
-    })
+    try {
+     const res = await noteModel.getAllUserNotes()
+     allNotes.value = await res.json()
+      return true
+    }catch(err){
+      console.log(err)
+      return false
+    }
   }
 
   const createNote = (user_id: number, note: Note) => {

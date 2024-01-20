@@ -7,15 +7,17 @@ import  {computed, ref} from 'vue'
   import {generateRandomNotesArray} from "../../API/note_model"
   import {useUiStore} from '../../stores/ui'
 import { useNoteStore } from '@/stores/notes'
+import { useUserStore } from '@/stores/user'
   const uis = useUiStore()
   const noteStore = useNoteStore()
-
+  const userStore = useUserStore()
+  noteStore.fetchUserNotes(userStore.user!.id!)
 const notes = computed(()=> useNoteStore().allNotes)
 
   const currentNote = ref(null)
 </script>
 <template>
-    <NoteTable :notes="notes" />
+    <NoteTable  />
 </template>
 <style>
 

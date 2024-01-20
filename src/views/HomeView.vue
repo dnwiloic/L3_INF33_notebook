@@ -14,7 +14,7 @@ import { useNoteStore } from '@/stores/notes';
 
 tagStore.fetchUserTags(userStore.user!.id!)
 noteStore.fetchUserNotes(userStore.user!.id!)
-console.log(tagStore.userTags)
+
 
   function toggleActive(domElt: HTMLElement|null){
     if(!domElt) return
@@ -64,7 +64,7 @@ console.log(tagStore.userTags)
       <div class="sidebar" id="side_nav">
         <div class="header-box px-3 pt-3 pb-4 d-flex justify-content-between">
           <h1 class="fs-4">
-            <span class="bg-white text-dark rounder shadow px-2 mx-2">Nt</span>
+            <span class="bg-dark text-white rounder shadow px-2 mx-2">Nt</span>
             <span class="">Note</span>
           </h1>
           <button class="btn d-lg-none d-block btn-close px-1 py-0 text-white" to-close="side_nav">
@@ -87,13 +87,13 @@ console.log(tagStore.userTags)
                Notes
             </RouterLink>
           </li>
-          <li class="">
+          <!--<li class="">
             
             <RouterLink :to="{name:''}" class="text-decoration-none px-2 py-2 d-block nav-lk"> 
               <font-awesome-icon icon="fa-solid fa-star" />
               Favories
             </RouterLink>
-          </li>
+          </li> -->
           <li class="">
             
             <RouterLink :to="{name:'categories'}" class="text-decoration-none nav-lk px-2 py-2 d-block d-flex justify-content-between">
@@ -252,12 +252,16 @@ hr.h-color{
 .text {
   display: inline-block;
   white-space: nowrap;
-  animation: marquee 30s 3s linear infinite alternate forwards;
+  animation: marquee 15s 2s linear infinite alternate forwards;
+}
+
+.text:hover{
+  transform: translateX(0) !important;
 }
 
 @keyframes marquee {
   0% { transform: translateX(0); }
   80% {transform: translateX(-50%); }
-  100% { transform: translateX(-1000%); }
+  100% { transform: translateX(-100%); }
 }
 </style>

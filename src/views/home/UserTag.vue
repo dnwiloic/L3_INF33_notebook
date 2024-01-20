@@ -19,7 +19,6 @@ console.log(userStore.isAuthentificate)
 tagStore.fetchUserTags(userStore.user!.id!)
 const formAction = ref('add') as Ref<FormAction>
 const tags = computed(()=>{
-    console.log(tagStore.userTags)
     return tagStore.userTags as Array<Tag>
 })
 
@@ -49,7 +48,6 @@ const showerTable = computed(()=>{
                 <tr>
                     <th>Selectiontiner</th>
                     <th>titre de la categories</th>
-                    <th>Nombre de note liée</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -64,13 +62,16 @@ const showerTable = computed(()=>{
                 <tr v-for="tag in showerTable" :key="tag.id" >
                     <td><input type="checkbox"></td>
                     <td><span>{{ tag.content }}</span></td>
-                    <td>{{ }}</td>
                     <td @click="currentTag=tag">
                         <button 
                             @click="()=>{currentTag=tag; formAction='update'}" 
                             class="btn btn-success mx-2"
-                            data-bs-toggle="modal"  data-bs-target="#tag_form">Modifier</button>
-                        <button class="btn btn-danger mx-2"  data-bs-toggle="modal" :data-bs-target="'#'+uis.deleteTagConfimationForm">Supprimer</button>
+                            data-bs-toggle="modal"  data-bs-target="#tag_form">
+                            <font-awesome-icon icon="fa-solid fa-pen-to-square" />
+                        </button>
+                        <button class="btn btn-danger mx-2"  data-bs-toggle="modal" :data-bs-target="'#'+uis.deleteTagConfimationForm">
+                            <font-awesome-icon icon="fa-solid fa-trash" />
+                        </button>
                     </td>
                 </tr>
             </tbody>
