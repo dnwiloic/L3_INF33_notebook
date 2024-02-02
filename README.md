@@ -50,3 +50,5 @@ npm run test:unit
 ```sh
 npm run lint
 ```
+### Configure the API url 
+    set an environment variable with name VITE_API_URL with value the url of the backend linked to this app

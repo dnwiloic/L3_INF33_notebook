@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import TagsModel from '@/API/tag_model';
 import type Tag from '@/interfaces/tag';
 import { useUserStore } from './user';
-
+import { toast } from 'vue3-toastify';
 
 
 export const useTagsStore = defineStore('tags', () => {
@@ -25,21 +25,29 @@ export const useTagsStore = defineStore('tags', () => {
     delete(tag.nbr_notes)
     tagModel.addUsserTag(tag).then(
       res => {
-        res.json().then( ()=>{ fetchUserTags(user_id)})
-        .catch(err => console.log(err))
+        res.json().then( ()=>{ 
+          toast.success(`Le tag  ${tag.content} à été créé`)
+          fetchUserTags(user_id)
+        })
+        .catch(err => {
+          toast.error(`Erreur lors de la création du tag`)
+        })
       }
     )
-    .catch(err => console.log(err))
+    .catch(err => toast.error(`Erreur lors de la création du tag`))
   }
 
   const updateTag = (user_id: number, tag: Tag) => {
     const tagModel = new TagsModel(user_id)
     tagModel.update(tag.id!, tag).then(
       res => {
-        res.json().then( ()=>{ fetchUserTags(user_id)})
-        .catch(err => console.log(err))
+        res.json().then( ()=>{ 
+          toast.success(`Le tag  ${tag.content} à été mis à jour `)
+          fetchUserTags(user_id)
+        })
+        .catch(err => toast.error(`Erreur lors de la mise à jour du tag`))
       }
-    ).catch(err => console.log(err))
+    ).catch(err => toast.error(`Erreur lors de la mise à jour du tag`))
   }
 
   const deleteTag = (user_id: number, tag_id: number) => {
@@ -47,12 +55,12 @@ export const useTagsStore = defineStore('tags', () => {
     tagModel.delete(tag_id).then(
       res => {
         res.json().then( ()=>{
-          console.log('Tag deleted')
+          toast.success(`Le tag  à été supprimé`)
           fetchUserTags(user!.id!)
         })
-        .catch(err => console.log(err))
+        .catch(err => toast.error(`Erreur lors de la suppression du tag`))
       }
-    ).catch(err => console.log(err))
+    ).catch(err => toast.error(`Erreur lors de la suppression du tag`))
   }
 
   

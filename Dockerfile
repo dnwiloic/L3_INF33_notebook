@@ -1,20 +1,11 @@
-# Utilisez une image de base contenant Node.js
-FROM node
-
-# Définissez le répertoire de travail dans le conteneur
-WORKDIR /usr/src/app
-
-# Copiez les fichiers de votre application dans le conteneur
-COPY . .
-
-# Installez les dépendances
+FROM node:latest as build-stage
+WORKDIR /app
+COPY package*.json ./
 RUN yarn install
+COPY ./ .
+RUN npm run build
 
-# Construisez votre application
-# RUN npm run build
-
-# Exposez le port sur lequel votre application sera en cours d'exécution
-EXPOSE 8080
-
-# Commande pour démarrer votre application
-CMD ["npm", "run", "dev"]
+FROM nginx as production-stage
+RUN mkdir /app
+COPY --from=build-stage /app/dist /app
+COPY nginx.conf /etc/nginx/nginx.conf

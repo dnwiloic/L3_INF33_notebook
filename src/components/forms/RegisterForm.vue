@@ -4,6 +4,7 @@ import '../../assets/form.css'
 import { useCounterStore } from '@/stores/counter';
 import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
 const router = useRouter()
 const userStore = useUserStore()
 const formData = ref({
@@ -24,6 +25,8 @@ const submit = async () => {
             })
         if(res)
         router.push({name:'accueil'})
+    }else{
+        toast.error("Erreur de validation de donnée: les champ 'mot de passe' et 'confirmation de mot de passe' doivent être égaux")
     }
 }
 </script>

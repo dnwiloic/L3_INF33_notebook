@@ -1,8 +1,7 @@
 <script setup lang="ts">
   import { useUiStore } from '@/stores/ui';
-  import { defineProps } from 'vue';
-import star from '@/assets/img/star.png'
-import plain_star from '@/assets/img/plain-start.png'
+import star from '@/assets/img/star.png';
+import plain_star from '@/assets/img/plain-start.png';
 import { useNoteStore } from '@/stores/notes';
 import { useUserStore } from '@/stores/user';
 import type Note from '@/interfaces/note';
