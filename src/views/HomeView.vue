@@ -199,9 +199,18 @@ hr.h-color{
   color: black;
 }
 
-.sidebar li.active{
-  background: black;
+.sidebar li{
   border-radius: 0.5em;
+}
+.sidebar li.active{
+  background: #0d6efd;
+  
+}
+
+.sidebar li:hover{
+  background: #79aeffe3;
+  transform: scale(1.03,1.03);
+  transition: all 0.2s;
 }
 
 .sidebar li.active .nav-lk, .sidebar li.active .nav-lk:hover{

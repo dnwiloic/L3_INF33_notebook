@@ -48,6 +48,9 @@ import { useUserStore } from '@/stores/user';
             noteStore.updateNote(userStore.user!.id!, tmp_note.value)
         else
             noteStore.createNote(userStore.user!.id!, tmp_note.value)
+        tmp_note.value = {
+            tags: [] as Array<Tag>
+        } as Note
     }
 </script>
 <template>
@@ -72,6 +75,10 @@ import { useUserStore } from '@/stores/user';
                         <label for="question-text" class="col-form-label">Question</label>
                         <textarea class="form-control" id="question-text" v-model="tmp_note.question"></textarea>
                     </div>
+                    <!--<div class="mb-3">
+                        <label for="responce-text" class="col-form-label">Réponse</label>
+                        <textarea class="form-control" id="responce-text" v-model="tmp_note.response"></textarea>
+                    </div>-->
                     <div class="mb-3">
                         <input class="form-check-input" type="checkbox"  id="favorite" v-model="tmp_note.is_favorite">
                         <label for="favorite" class="col-form-label">Favorie </label>

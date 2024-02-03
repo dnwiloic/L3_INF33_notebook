@@ -2,10 +2,12 @@
 import { generateRandomNotesArray } from '@/API/note_model';
 import EvaluationCard from '@/components/evaluation/EvaluationCard.vue';
 import { useTestStore } from '@/stores/test';
-import {computed, onMounted, onUpdated, ref} from 'vue'
+import {computed, onMounted, onUpdated, ref, watch} from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import { test_status_enum } from '@/interfaces/test_state_enum'
 import CorrectionCard from '@/components/evaluation/CorrectionCard.vue'
+import { faBold } from '@fortawesome/free-solid-svg-icons';
+import { idText } from 'typescript';
 
 
 // onMounted(()=>{
@@ -31,9 +33,15 @@ const tags = tagsArray.map((tg)=> parseInt(tg))
 const test_is_loaded = ref(false)
  testStore.initTest(tags, nbrNotes).then((res)=>{
     test_is_loaded.value = res
+    if(!test_is_loaded.value){
+        router.push({name: 'config_evaluation'})
+    }
  })
 const test = computed(()=>testStore.test)
 
+watch([test_is_loaded],()=>{
+    goToHomeafter()
+})
 const showForm = ref(true)
 
 function next(){
@@ -53,6 +61,28 @@ function next(){
     console.log(test.value)
 }
 
+const evaluationStage = computed(()=>{
+    switch(testStore.statut){
+        case test_status_enum.canceled: 
+            return "Annulé";
+        case test_status_enum.finish: 
+            return "Terminé";
+        case test_status_enum.halfway: 
+            return "A mis chemin";
+        case test_status_enum.in_correction: 
+            return "Correction";
+        case test_status_enum.in_test: 
+            return "Evaluation";
+        case test_status_enum.not_started: 
+            return "Non démarrer";
+        default:
+            return "Incommu";
+    }
+})
+function goToHomeafter(){
+    console.log("Call")
+        router.push({name: 'config_evaluation'})
+}
 
 function terminer(){
     if(testStore.statut === test_status_enum.finish)
@@ -63,6 +93,19 @@ function terminer(){
 }
 </script>
 <template>
+    <header class="bg-white w-100 p-2">
+        <div class="d-flex flex-row justify-content-around align-items-center">
+            <div class="text-center fw-bold d-none d-lg-block">
+                Votre évaluation est en cours
+            </div>
+            <div class="text-center fw-bold">
+                Etape: <span class="text-success fw-bold">{{ evaluationStage }}</span>
+            </div>
+            <div class="text-center fw-bold">
+                Progression: <span class="text-warning fw-bold">{{ testStore.currentNoteIndex+1 }}/{{ testStore.test.length }}</span>
+            </div>
+        </div>
+    </header>
     <div v-if="test_is_loaded" id="question">
         <Transition v-if="testStore.test.length >= 1">
             <div v-if="showForm" class="question-card-form">
@@ -95,8 +138,8 @@ function terminer(){
             </div>
         </div>
     </div>
-    <div v-else class="d-flex vh-100 justify-content-center align-items-center">
-        <div class="bg-white p-5 text-center">
+    <div v-else @change="goToHomeafter" class="d-flex vh-100 justify-content-center align-items-center">
+        <div  class="bg-white p-5 text-center">
             loading...
         </div>
     </div>
@@ -104,7 +147,7 @@ function terminer(){
 <style scoped>
 #question{
     display: flex;
-    height: 100vh;
+    height: 80vh;
     justify-content: center;
     align-items: center;
     

@@ -20,7 +20,7 @@ const demarrer =()=>{
     <div id="connfig-eval">
         <div class="config-eval-form">
             <div class="mb-3">
-                <label for="note-title" class="col-form-label">numbre de notes :</label>
+                <label for="note-title" class="col-form-label">numbre maximal de note de notes :</label>
                 <input type="number" class="form-control" id="note-title" v-model="questionNumber">
             </div>
             <div class="mb-3">
@@ -48,5 +48,6 @@ const demarrer =()=>{
     margin-top: 3em;
     max-width: 25em;
     margin-inline: auto;
+    box-shadow: 0rem 0.1rem 0.5rem 0.2rem rgb(143, 141, 141);
 }
 </style>

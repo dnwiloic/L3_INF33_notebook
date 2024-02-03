@@ -11,7 +11,7 @@ const testStore = useTestStore()
                 <label for="note-title" class="col-form-label"> {{ testStore.currentNote.question }}</label>
                 <input type="text" class="form-control" id="note-title"
                         v-model="testStore.currentNote.user_response"
-                        >
+                >
             </div>
         </div>
     </div>

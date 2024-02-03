@@ -36,6 +36,7 @@ const saveTag = () => {
         tagStore.createTag(userStore.user!.id!, tag.value)
         return
     }
+    tag.value = {} as Tag
 
 }
 </script>

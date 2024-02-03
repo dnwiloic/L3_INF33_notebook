@@ -22,7 +22,8 @@ export const useTestStore = defineStore('tests',()=>{
     const currentNoteIndex = ref(0)
     
     const initTest = async (tags: Array<number>, nbr_questions: number)=>{
-        statut.value = test_status_enum.in_test
+        statut.value = test_status_enum.in_test;
+        currentNoteIndex.value = 0;
         try{
             console.log('getting not')
             const res = await evalModel.random_note(tags, nbr_questions)
@@ -92,6 +93,6 @@ export const useTestStore = defineStore('tests',()=>{
         return notes.value
     }
 
-    return {statut, notes, score, isLastNote, currentNote,test,
+    return {statut, notes, score, isLastNote, currentNote,test, currentNoteIndex,
         changeNote, changeStep, initTest, setUserResponse, setQuestionScore, getCorrectionDatas}
 })

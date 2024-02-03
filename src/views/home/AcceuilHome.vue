@@ -26,7 +26,9 @@ const noteFormAction = ref('add' as FormAction)
         <NoteForm :note="currentNote" :action="noteFormAction" />
         <DeleteNote :note="currentNote"/>
         <div class="grid-container">
-            <button class="btn btn-primary" data-bs-toggle="modal" @click="noteFormAction='add'" :data-bs-target="'#'+uis.noteFormId">Ajouter</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" @click="noteFormAction='add'" :data-bs-target="'#'+uis.noteFormId">
+                Nouvelle note
+            </button>
             <div  
                 v-for="note in notes" v-bind:key="note.id" 
                 @click="()=>{
