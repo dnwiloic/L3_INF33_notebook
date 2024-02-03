@@ -51,13 +51,13 @@ const noteFormAction = ref('add' as FormAction)
 @media (min-width: 700px){
     .grid-container {
         display: grid;
-        grid-template-columns: auto auto;
+        grid-template-columns: 1fr 1fr;
     }
 }
 @media (min-width: 1024px){
     .grid-container {
         display: grid;
-        grid-template-columns: auto auto auto;
+        grid-template-columns: 1fr 1fr 1fr;
     }
 }
 </style>

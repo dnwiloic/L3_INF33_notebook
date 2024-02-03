@@ -18,8 +18,11 @@ const uuserStore = useUserStore()
 </script>
 <template>
     <div v-if="note" class="card" id="note_card">
-        <h5 class="card-title">{{ props.note.title }}</h5>
-        <p class="card-text">{{ props.note.content }}</p>
+      <div>
+         <h5 class="card-title overflow-auto mb-1">{{ props.note.title }}</h5>
+      </div>
+       
+        <p class="card-text overflow-auto">{{ props.note.content }}</p>
         <div id="note_card_action">
           <div class="d-flex justify-content-between " >
               <button @click="change_fav" class="btn">
@@ -42,11 +45,16 @@ const uuserStore = useUserStore()
   margin-top: auto;
 }
 .card{
-    height: 9em;
-    padding: 1.2em;
+    height: 11em;
+    padding: 1em;
     border-radius: 1.1em;
+   
 }
 
+.card:hover{
+  box-shadow: 0rem 0.05rem 0.25rem 0.1rem rgb(143, 141, 141);
+  transition: all 0.5s;
+}
 .card:hover #note_card_action{
   visibility: visible;
 }
